@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Development Quizzes</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-light: #3b82f6;
+            --secondary: #f8fafc;
+            --text: #0f172a;
+            --background: #ffffff;
+            --code-bg: #1e293b;
+            --sidebar-width: 250px;
+            --correct: #22c55e;
+            --wrong: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Poppins", sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background: var(--background);
+        }
+
+        /* mobile nav toggle */
+        #nav-toggle {
+            display: none;
+        }
+
+        .nav-toggle-label {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 999;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .nav-toggle-label span,
+        .nav-toggle-label span::before,
+        .nav-toggle-label span::after {
+            display: block;
+            background: var(--primary);
+            height: 2px;
+            width: 24px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .nav-toggle-label span::before,
+        .nav-toggle-label span::after {
+            content: "";
+            position: absolute;
+        }
+
+        .nav-toggle-label span::before {
+            bottom: 8px;
+        }
+
+        .nav-toggle-label span::after {
+            top: 8px;
+        }
+
+        /* main content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 2rem;
+            max-width: 1200px;
+        }
+
+        .tutorial-section {
+            margin-bottom: 3rem;
+        }
+
+        .tutorial-section h1 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            font-size: 2.5rem;
+        }
+
+        /* sidebar navigation */
+        .sidebar {
+            position: fixed;
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: var(--secondary);
+            padding: 2rem 0;
+            overflow-y: auto;
+            transition: left 0.3s ease;
+            left: 0;
+            top: 0;
+            border-right: 1px solid #e2e8f0;
+        }
+
+        .sidebar h2 {
+            padding: 0 1.5rem;
+            margin-bottom: 2rem;
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+
+        .nav-links {
+            list-style: none;
+        }
+
+        .nav-links li a {
+            display: block;
+            padding: 0.75rem 1.5rem;
+            color: var(--text);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .nav-links li a:hover,
+        .nav-links li a.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .nav-links li a i {
+            margin-right: 0.5rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* quiz questions  */
+        .question {
+            margin-bottom: 2rem;
+        }
+
+        .question h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .options {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .options li {
+            margin-bottom: 0.75rem;
+        }
+
+        label {
+            cursor: pointer;
+            padding: 0.5rem;
+            display: block;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+
+        input[type="radio"] {
+            display: none;
+        }
+
+        /* correct answer */
+        input[type="radio"]:checked.correct+label {
+            background-color: var(--correct);
+            color: white;
+            border-color: var(--correct);
+        }
+
+        /* incorrect answer */
+        input[type="radio"]:checked.wrong+label {
+            background-color: var(--wrong);
+            color: white;
+            border-color: var(--wrong);
+        }
+
+        .result {
+            margin-top: 2rem;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        .result span {
+            color: var(--primary);
+        }
+
+        /* card container */
+        .card-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            padding: 1rem;
+        }
+
+        .card {
+            perspective: 1000px;
+            width: 100%;
+            height: 350px;
+            margin: 0 auto;
+        }
+
+        .card-inner {
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 0.6s ease-in-out;
+        }
+
+        .card:hover .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .card-front,
+        .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 15px;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.15);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            padding: 15px;
+        }
+
+        .card-front {
+            background: linear-gradient(135deg, #3b82f6, #e0f2fe);
+            color: #0f172a;
+            flex-direction: column;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .card-front h2 {
+            font-size: 1.2rem;
+            color: #0f172a;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-transform: capitalize;
+            letter-spacing: 0.5px;
+        }
+
+        .card-front .footer {
+            font-size: 0.9rem;
+            color: #6b7280;
+            font-style: italic;
+        }
+
+        .card-back {
+            background: #0f172a;
+            color: #fff;
+            transform: rotateY(180deg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .card-back .pic {
+            width: 80%;
+            height: auto;
+            object-fit: cover;
+            border-radius: 15px;
+        }
+
+        /* mobile responsiveness */
+        @media (max-width: 768px) {
+            .nav-toggle-label {
+                display: block;
+            }
+
+            .sidebar {
+                left: -100%;
+                z-index: 998;
+            }
+
+            #nav-toggle:checked~.sidebar {
+                left: 0;
+            }
+
+            #nav-toggle:checked+.nav-toggle-label span {
+                background: transparent;
+            }
+
+            #nav-toggle:checked+.nav-toggle-label span::before {
+                transform: rotate(45deg);
+                bottom: 0;
+            }
+
+            #nav-toggle:checked+.nav-toggle-label span::after {
+                transform: rotate(-45deg);
+                top: 0;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 4rem 1rem 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+     <!-- hamburger menu  -->
+    <input type="checkbox" id="nav-toggle" />
+    <label for="nav-toggle" class="nav-toggle-label">
+        <span></span>
+    </label>
+ 
+    <!-- sidebar  -->
+    <nav class="sidebar">
+        <h2>Quizzes</h2>
+        <ul class="nav-links">
+            <li>
+                <a href="#html-quiz"><i class="fa-brands fa-html5"></i>HTML</a>
+            </li>
+            <li>
+                <a href="#css-quiz"><i class="fa-brands fa-css3-alt"></i>CSS</a>
+            </li>
+            <li>
+                <a href="#javascript-quiz"><i class="fa-brands fa-js"></i>JavaScript</a>
+            </li>
+            <li>
+                <a href="./index.html#quiz" style="background-color:#0f172a; color:#ffffff;"><i
+                        class="fa-solid fa-house"></i> Return Home</a>
+            </li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <!-- html quiz section  -->
+        <section id="html-quiz" class="tutorial-section">
+            <h1>HTML Quizzes</h1>
+
+            <div class="question">
+                <h3> What does HTML stand for?</h3>
+                <ul class="options">
+                    <li>
+                        <input type="radio" id="q1-a1" name="q1" class="wrong">
+                        <label for="q1-a1">Hyper Trainer Marking Language</label>
+                    </li>
+                    <li>
+                        <input type="radio" id="q1-a2" name="q1" class="correct">
+                        <label for="q1-a2">Hyper Text Markup Language</label>
+                    </li>
+                    <li>
+                        <input type="radio" id="q1-a3" name="q1" class="wrong">
+                        <label for="q1-a3">Hyperlinks and Text Markup Language</label>
+                    </li>
+                    <li>
+                        <input type="radio" id="q1-a4" name="q1" class="wrong">
+                        <label for="q1-a4">Home Tool Markup Language</label>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="card-list">
+                <div class="card">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <h2>What was the first-ever web browser?</h2>
+                            <p class="footer">(hover to reveal)</p>
+                        </div>
+                        <div class="card-back">
+                             <p>The first web browser was WorldWideWeb, created in 1990 by British computer scientist Tim Berners-Lee. WorldWideWeb was later renamed Nexus(Rohit Bhaiya OP) to avoid confusion between the program and the World Wide Web.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <h2>What was the first version of HTML released?</h2>
+                            <p class="footer">(hover to reveal)</p>
+                        </div>
+                        <div class="card-back">
+                            <p>HTML 1.0 (1993)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question">
+                <h3> What is the correct HTML element for inserting a line break?</h3>
+                <ul class="options">
+                    <li>
+                        <input type="radio" id="q2-a1" name="q2" class="correct">
+                        <label for="q2-a1">&lt;br&gt;</label>
+                    </li>
+                    <li>
+                        <input type="radio" id="q2-a2" name="q2" class="wrong">
+                        <label for="q2-a2">&lt;lb&gt;</label>
+                    </li>
+                    <li>
+                        <input type="radio" id="q2-a3" name="q2" class="wrong">
+                        <label for="q2-a3">&lt;break&gt;</label>
+                    </li>
+                    <li>
+                        <input type="radio" id="q2-a4" name="q2" class="wrong">
+                        <label for="q2-a4">&lt;line&gt;</label>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- css quiz section  -->
+        <section id="css-quiz" class="tutorial-section">
+            <h1>CSS Quizzes</h1>
+
+            <div class="question">
+                <h3> Which property is used to align items along the main axis in Flexbox?</h3>
+                <ul class="options">
+                    <li>
+                        <input type="radio" id="q3-a1" name="q3" class="wrong">
+                        <label for="q3-a1">align-items</label>
+                    </li>
+                    <li>
+                        <input type="radio" id="q3-a2" name="q3" class="correct">
+                        <label for="q3-a2">justify-content</label>
+                    </li>
+                    <li>
+                        <input type="radio" id="q3-a3" name="q3" class="wrong">
+                        <label for="q3-a3">flex-direction</label>
+                    </li>
+                    <li>
+                        <input type="radio" id="q3-a4" name="q3" class="wrong">
+                        <label for="q3-a4">align-content</label>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="card-list">
+                <div class="card">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <h2>What was the first CSS version released?</h2>
+                            <p class="footer">(hover to reveal)</p>
+                        </div>
+                        <div class="card-back">
+                             <p>CSS1 (1996)</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <h2>What was the first backend web development framework?</h2>
+                            <p class="footer">(hover to reveal)</p>
+                        </div>
+                        <div class="card-back">
+                            <p>Ruby on Rails (released in 2004)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question">
+                <h3> What does the "fr" unit represent in CSS Grid?</h3>
+                <ul class="options">
+                    <li>
+                        <input type="radio" id="q4-a1" name="q4" class="wrong">
+                        <label for="q4-a1">Flexible Ratio</label>
+                    </li>
+                    <li>
+                        <input type="radio" id="q4-a2" name="q4" class="correct">
+                        <label for="q4-a2">Fraction of available space</label>
+                    </li>
+                    <li>
+                        <input type="radio" id="q4-a3" name="q4" class="wrong">
+                        <label for="q4-a3">Frame</label>
+                    </li>
+                    <li>
+                        <input type="radio" id="q4-a4" name="q4" class="wrong">
+                        <label for="q4-a4">Full Ratio</label>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- javascript quiz section  -->
+        <section id="javascript-quiz" class="tutorial-section">
+            <h1>Javascript Quizzes</h1>
+
+            <div class="question">
+                <h3>What is the correct syntax for referring to an external script called "app.js"?</h3>
+                <ul class="options">
+                    <li>
+                        <input type="radio" id="q5-a1" name="q5" class="wrong">
+                        <label for="q5-a1">&lt;script src="app.js"&gt;</label>
+                    </li>
+                    <li>
+                        <input type="radio" id="q5-a2" name="q5" class="correct">
+                        <label for="q5-a2">&lt;script src="app.js"&gt;&lt;/script&gt;</label>
+                    </li>
+                    <li>
+                        <input type="radio" id="q5-a3" name="q5" class="wrong">
+                        <label for="q5-a3">&lt;script href="app.js"&gt;&lt;/script&gt;</label>
+                    </li>
+                    <li>
+                        <input type="radio" id="q5-a4" name="q5" class="wrong">
+                        <label for="q5-a4">&lt;link src="app.js"&gt;</label>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="card-list">
+                <div class="card">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <h2>What was the first client-side scripting language?</h2>
+                            <p class="footer">(hover to reveal)</p>
+                        </div>
+                        <div class="card-back">
+                             <p>JavaScript (developed by Netscape in 1995)</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <h2>What was the first server-side scripting language?</h2>
+                            <p class="footer">(hover to reveal)</p>
+                        </div>
+                        <div class="card-back">
+                            <p>Perl (used for web development in the early 1990s)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="question">
+                <h3>Which data type is NOT primitive in JavaScript?</h3>
+                <ul class="options">
+                    <li>
+                        <input type="radio" id="q6-a1" name="q6" class="wrong">
+                        <label for="q6-a1">String</label>
+                    </li>
+                    <li>
+                        <input type="radio" id="q6-a2" name="q6" class="correct">
+                        <label for="q6-a2">Object</label>
+                    </li>
+                    <li>
+                        <input type="radio" id="q6-a3" name="q6" class="wrong">
+                        <label for="q6-a3">Number</label>
+                    </li>
+                    <li>
+                        <input type="radio" id="q6-a4" name="q6" class="wrong">
+                        <label for="q6-a4">Boolean</label>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- result section -->
+        <div class="result">
+            Select an answer to see if you are correct!
+        </div>
+
+    </main>
+
+
+</body>
+
+</html>
