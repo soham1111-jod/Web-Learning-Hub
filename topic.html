@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Web Development Tutorials</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-light: #3b82f6;
+            --secondary: #f8fafc;
+            --text: #0f172a;
+            --background: #ffffff;
+            --code-bg: #1e293b;
+            --sidebar-width: 250px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Poppins", sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background: var(--background);
+        }
+
+        /* mobile nav toggle */
+        #nav-toggle {
+            display: none;
+        }
+
+        .nav-toggle-label {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 999;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .nav-toggle-label span,
+        .nav-toggle-label span::before,
+        .nav-toggle-label span::after {
+            display: block;
+            background: var(--primary);
+            height: 2px;
+            width: 24px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .nav-toggle-label span::before,
+        .nav-toggle-label span::after {
+            content: "";
+            position: absolute;
+        }
+
+        .nav-toggle-label span::before {
+            bottom: 8px;
+        }
+
+        .nav-toggle-label span::after {
+            top: 8px;
+        }
+
+        /* sidebar navigation */
+        .sidebar {
+            position: fixed;
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: var(--secondary);
+            padding: 2rem 0;
+            overflow-y: auto;
+            transition: left 0.3s ease;
+            left: 0;
+            top: 0;
+            border-right: 1px solid #e2e8f0;
+        }
+
+        .sidebar h2 {
+            padding: 0 1.5rem;
+            margin-bottom: 2rem;
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+
+        .nav-links {
+            list-style: none;
+        }
+
+        .nav-links li a {
+            display: block;
+            padding: 0.75rem 1.5rem;
+            color: var(--text);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .nav-links li a:hover,
+        .nav-links li a.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .nav-links li a i {
+            margin-right: 0.5rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* main content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 2rem;
+            max-width: 1200px;
+        }
+
+        .tutorial-section {
+            margin-bottom: 3rem;
+        }
+
+        .tutorial-section h1 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            font-size: 2.5rem;
+        }
+
+        .tutorial-section h2 {
+            color: var(--text);
+            margin: 2rem 0 1rem;
+            font-size: 1.8rem;
+        }
+
+        .tutorial-section p {
+            margin-bottom: 1rem;
+            line-height: 1.7;
+        }
+
+        /* code blocks */
+        pre {
+            background: var(--code-bg);
+            color: #fff;
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        code {
+            font-family: "Monaco", "Consolas", monospace;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        /* examples and output */
+        .example-output {
+            background: var(--secondary);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            border: 1px solid #e2e8f0;
+        }
+
+        /* mobile responsiveness */
+        @media (max-width: 768px) {
+            .nav-toggle-label {
+                display: block;
+            }
+
+            .sidebar {
+                left: -100%;
+                z-index: 998;
+            }
+
+            #nav-toggle:checked~.sidebar {
+                left: 0;
+            }
+
+            #nav-toggle:checked+.nav-toggle-label span {
+                background: transparent;
+            }
+
+            #nav-toggle:checked+.nav-toggle-label span::before {
+                transform: rotate(45deg);
+                bottom: 0;
+            }
+
+            #nav-toggle:checked+.nav-toggle-label span::after {
+                transform: rotate(-45deg);
+                top: 0;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 4rem 1rem 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <input type="checkbox" id="nav-toggle" />
+    <label for="nav-toggle" class="nav-toggle-label">
+        <span></span>
+    </label>
+
+    <nav class="sidebar">
+        <h2>Tutorials</h2>
+        <ul class="nav-links">
+            <li>
+                <a href="#html"><i class="fa-brands fa-html5"></i>HTML</a>
+            </li>
+            <li>
+                <a href="#css"><i class="fa-brands fa-css3-alt"></i>CSS</a>
+            </li>
+            <li>
+                <a href="#javascript"><i class="fa-brands fa-js"></i>JavaScript</a>
+            </li>
+            <li>
+                <a href="#webapis"><i class="fa-solid fa-sitemap"></i>Web APIs</a>
+            </li>
+            <li>
+                <a href="#accessibility"><i class="fa-solid fa-universal-access"></i>ARIA Roles</a>
+            </li>
+            <li>
+                <a href="#responsive-design"><i class="fa-solid fa-mobile-alt"></i> Responsive Design</a>
+            </li>
+            <li>
+                <a href="./index.html#topics" style="background-color:#0f172a; color:#ffffff;"><i
+                        class="fa-solid fa-house"></i> Return Home</a>
+            </li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+
+        <!-- html section  -->
+        <section id="html" class="tutorial-section">
+            <h1>HTML Tutorial</h1>
+
+            <h2>Basic Structure</h2>
+            <p>
+                Every HTML document needs a basic structure. Here's the foundation:
+            </p>
+            <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;Your Page Title&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;!-- Your content goes here --&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+            <h2>Text Elements</h2>
+            <p>HTML provides various elements for text content:</p>
+            <pre><code>&lt;h1&gt;Main Heading&lt;/h1&gt;
+&lt;h2&gt;Subheading&lt;/h2&gt;
+&lt;p&gt;This is a paragraph of text.&lt;/p&gt;
+&lt;strong&gt;Bold text&lt;/strong&gt;
+&lt;em&gt;Italic text&lt;/em&gt;</code></pre>
+
+            <div class="example-output">
+                <h1 style="font-size: 1.5rem">Main Heading</h1>
+                <h2 style="font-size: 1.2rem">Subheading</h2>
+                <p>This is a paragraph of text.</p>
+                <strong>Bold text</strong> and <em>Italic text</em>
+            </div>
+        </section>
+
+        <!-- css section  -->
+        <section id="css" class="tutorial-section">
+            <h1>CSS Tutorial</h1>
+
+            <h2>Selectors and Properties</h2>
+            <p>CSS uses selectors to style HTML elements:</p>
+            <pre><code>/* Element Selector */
+p {
+    color: #333;
+    font-size: 16px;
+    margin-bottom: 1rem;
+}
+
+/* Class Selector */
+.button {
+    background-color: #2563eb;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+}
+
+/* ID Selector */
+#header {
+    background: #f8fafc;
+    padding: 1rem;
+}</code></pre>
+
+            <h2>Flexbox Layout</h2>
+            <p>Flexbox makes it easy to create flexible layouts:</p>
+            <pre><code>.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.item {
+    flex: 1;
+    padding: 1rem;
+}</code></pre>
+        </section>
+
+        <!-- javascript section  -->
+        <section id="javascript" class="tutorial-section">
+            <h1>JavaScript Tutorial</h1>
+
+            <h2>Variables and Data Types</h2>
+            <p>JavaScript has several ways to declare variables:</p>
+            <pre><code>// Variable declarations
+let name = "John";  // String
+const age = 25;     // Number
+var isActive = true;  // Boolean
+
+// Array
+const fruits = ["apple", "banana", "orange"];
+
+// Object
+const person = {
+    name: "John",
+    age: 25,
+    isStudent: true
+};</code></pre>
+
+            <h2>Functions</h2>
+            <p>Functions are blocks of reusable code:</p>
+            <pre><code>// Function declaration
+function greet(name) {
+    return Hello, ${name}!;
+}
+
+// Arrow function
+const multiply = (a, b) => a * b;
+
+// Function with default parameter
+function setColor(color = "blue") {
+    console.log(Color set to ${color});
+}</code></pre>
+        </section>
+
+        <!-- webapis section -->
+        <section id="webapis" class="tutorial-section">
+            <h1>Web APIs Tutorial</h1>
+
+
+            <h2>Fetch API</h2>
+            <p>The Fetch API provides a way to make network requests and handle responses. It's a modern alternative to
+                XMLHttpRequest, offering a cleaner and more powerful way to interact with APIs:</p>
+            <pre><code class="language-js">// Example: Fetching data from an API
+fetch('https://jsonplaceholder.typicode.com/posts/1')
+  .then(response => response.json())
+  .then(data => console.log(data))
+  .catch(error => console.error('Error:', error));</code></pre>
+            <p><em>Note: This code fetches data from a sample API and logs it to the console.</em></p>
+
+
+            <h2>Geolocation API</h2>
+            <p>The Geolocation API allows you to access the user's current location (with their permission). It's
+                commonly used for location-based services:</p>
+            <pre><code class="language-js">// Example: Getting user's current location
+navigator.geolocation.getCurrentPosition(
+  (position) => {
+    const { latitude, longitude } = position.coords;
+    console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
+  },
+  (error) => console.error('Error:', error.message)
+);</code></pre>
+            <p><em>Note: This code retrieves the user's latitude and longitude.</em></p>
+
+
+            <h2>Local Storage API</h2>
+            <p>The Local Storage API allows you to store data in the browser. The data is stored as key-value pairs and
+                persists even after the browser is closed:</p>
+            <pre><code class="language-js">// Example: Using Local Storage
+localStorage.setItem('username', 'JohnDoe'); // Save data
+const user = localStorage.getItem('username'); // Retrieve data
+console.log(user); // Output: JohnDoe
+localStorage.removeItem('username'); // Remove data</code></pre>
+            <p><em>Note: This code shows how to save, retrieve, and delete data from local storage.</em></p>
+        </section>
+
+        <!-- aria section -->
+        <section id="accessibility" class="tutorial-section">
+            <h1>ARIA Roles and Screen Reader Support</h1>
+
+            <h2>Introduction to ARIA</h2>
+            <p>
+                ARIA (Accessible Rich Internet Applications) roles and attributes are used to make web content more
+                accessible to users with disabilities. These attributes help screen readers and other assistive
+                technologies better understand the structure and functionality of your web pages.
+            </p>
+
+            <h2>Common ARIA Roles</h2>
+            <p>Here are some commonly used ARIA roles to improve accessibility:</p>
+            <pre><code class="language-html">&lt;!-- Landmark roles --&gt;
+&lt;header role="banner"&gt;Site Header&lt;/header&gt;
+&lt;nav role="navigation"&gt;Main Menu&lt;/nav&gt;
+&lt;main role="main"&gt;Main Content&lt;/main&gt;
+&lt;footer role="contentinfo"&gt;Footer Information&lt;/footer&gt;
+
+&lt;!-- Button role --&gt;
+&lt;div role="button" tabindex="0"&gt;Clickable Button&lt;/div&gt;
+
+&lt;!-- Alert role --&gt;
+&lt;div role="alert"&gt;This is an important message!&lt;/div&gt;</code></pre>
+
+            <h2>Using ARIA Attributes</h2>
+            <p>ARIA attributes provide additional information about elements, enhancing their accessibility:</p>
+            <pre><code class="language-html">&lt;!-- ARIA Label --&gt;
+&lt;button aria-label="Close Menu"&gt;&times;&lt;/button&gt;
+
+&lt;!-- ARIA Hidden --&gt;
+&lt;div aria-hidden="true"&gt;Hidden from screen readers&lt;/div&gt;
+
+&lt;!-- ARIA Live --&gt;
+&lt;div aria-live="polite"&gt;This content will be updated dynamically&lt;/div&gt;
+
+&lt;!-- ARIA Expanded --&gt;
+&lt;button aria-expanded="false"&gt;Show Details&lt;/button&gt;</code></pre>
+
+            <h2>Example: Accessible Navigation Menu</h2>
+            <p>Here's an example of a fully accessible navigation menu with ARIA roles and attributes:</p>
+            <pre><code class="language-html">&lt;nav role="navigation" aria-label="Primary Navigation"&gt;
+    &lt;ul&gt;
+        &lt;li&gt;&lt;a href="index.html" aria-current="page"&gt;Home&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href="about.html"&gt;About Us&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href="services.html"&gt;Services&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href="contact.html"&gt;Contact&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+&lt;/nav&gt;</code></pre>
+            <p><em>Note: The <code>aria-current</code> attribute is used to indicate the currently active page.</em></p>
+
+            <h2>Using ARIA for Screen Readers</h2>
+            <p>ARIA attributes can greatly improve the experience for screen reader users:</p>
+            <pre><code class="language-html">&lt;!-- Descriptive label for screen readers --&gt;
+&lt;input type="text" aria-label="Search the site" placeholder="Search..."&gt;
+
+&lt;!-- Grouping form elements --&gt;
+&lt;fieldset&gt;
+    &lt;legend&gt;Contact Information&lt;/legend&gt;
+    &lt;label for="name"&gt;Name:&lt;/label&gt;
+    &lt;input type="text" id="name"&gt;
+    &lt;label for="email"&gt;Email:&lt;/label&gt;
+    &lt;input type="email" id="email"&gt;
+&lt;/fieldset&gt;</code></pre>
+
+            <h2>Conclusion</h2>
+            <p>
+                Using ARIA roles and attributes is essential for building inclusive and accessible websites. By
+                implementing these practices, you ensure a better user experience for everyone, including those relying
+                on assistive technologies.
+            </p>
+        </section>
+
+        <!-- responsive design section  -->
+        <section id="responsive-design" class="tutorial-section">
+            <h1>Responsive Design Tutorial</h1>
+
+            <h2>Introduction to Responsive Design</h2>
+            <p>
+                Responsive Design is a web design approach that makes web pages render well on a variety of devices and
+                window or screen sizes. It uses CSS media queries, flexible grid layouts, and scalable images to adapt
+                the layout to the user's device.
+            </p>
+
+            <h2>Using Media Queries</h2>
+            <p>Media queries allow you to apply different styles based on the device's screen size or other
+                characteristics:</p>
+            <pre><code>@media screen and (max-width: 768px) {
+    body {
+        background-color: lightblue;
+    }
+
+    .container {
+        flex-direction: column;
+    }
+}</code></pre>
+
+            <h2>Flexbox and Grid for Layouts</h2>
+            <p>Flexbox and Grid are layout models that make it easier to design responsive layouts. Flexbox is ideal for
+                linear layouts, while Grid is better for two-dimensional layouts:</p>
+            <pre><code>.container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.item {
+    flex: 1 1 200px;
+    padding: 1rem;
+}
+
+@media screen and (max-width: 600px) {
+    .container {
+        flex-direction: column;
+    }
+}</code></pre>
+
+            <h2>Responsive Images</h2>
+            <p>To make images responsive, you can use the `max-width: 100%` rule and `height: auto` to ensure images
+                scale according to their container:</p>
+            <pre><code>img {
+    max-width: 100%;
+    height: auto;
+}</code></pre>
+
+            <h2>Mobile First Design</h2>
+            <p>Mobile-first design focuses on designing the mobile version of the website first and then scaling up for
+                larger devices. Use the following CSS rule to implement it:</p>
+            <pre><code>@media screen and (min-width: 768px) {
+    body {
+        font-size: 18px;
+    }
+}</code></pre>
+
+            <h2>Example: Responsive Navigation</h2>
+            <p>This is an example of a simple responsive navigation menu using media queries:</p>
+            <pre><code class="language-html">&lt;nav&gt;
+    &lt;ul&gt;
+        &lt;li&gt;&lt;a href="#"&gt;Home&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href="#"&gt;About&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href="#"&gt;Services&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href="#"&gt;Contact&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+&lt;/nav&gt;
+
+&lt;style&gt;
+nav ul {
+    display: flex;
+    justify-content: space-around;
+}
+
+@media screen and (max-width: 768px) {
+    nav ul {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+&lt;/style&gt;</code></pre>
+
+            <h2>Conclusion</h2>
+            <p>
+                Responsive design ensures that your website provides an optimal experience across a wide range of
+                devices. Using media queries, flexible layouts, and scalable images, you can create sites that adapt to
+                the user's screen size and provide a seamless user experience.
+            </p>
+        </section>
+
+    </main>
+</body>
+
+</html>
